@@ -1,0 +1,91 @@
+<Page
+    x:Class="ControlPantallas.Pages.PageFondo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:ControlPantallas.ViewModels">
+
+    <Page.DataContext>
+        <vm:FondoViewModel/>
+    </Page.DataContext>
+
+    <Grid Padding="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Notificación -->
+        <InfoBar
+            Grid.Row="0"
+            IsOpen="{Binding MostrarNotificacion}"
+            Message="{Binding Mensaje}"
+            Severity="Informational"
+            IsClosable="True"/>
+
+        <!-- Layout principal -->
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Panel de botones -->
+            <StackPanel
+                Grid.Column="0"
+                Spacing="10">
+
+                <Button
+                    Content="Seleccionar carpeta"
+                    Command="{Binding SeleccionarCarpetaCommand}"/>
+
+                <Button
+                    Content="Entra Fondo"
+                    Command="{Binding EntraFondoCommand}"/>
+
+                <Button
+                    Content="Sale Fondo"
+                    Command="{Binding SaleFondoCommand}"/>
+
+            </StackPanel>
+
+            <!-- GridView -->
+            <GridView
+                Grid.Column="1"
+                ItemsSource="{Binding Fondos}"
+                SelectedItem="{Binding FondoSeleccionado, Mode=TwoWay}"
+                SelectionMode="Single"
+                IsItemClickEnabled="True"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollMode="Enabled">
+
+                <GridView.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <StackPanel Width="200">
+
+                            <Image
+                                Source="{Binding Ruta}"
+                                Height="130"
+                                Stretch="UniformToFill"/>
+
+                            <TextBlock
+                                Text="{Binding Ruta}"
+                                FontSize="12"
+                                TextTrimming="CharacterEllipsis"/>
+
+                        </StackPanel>
+
+                    </DataTemplate>
+
+                </GridView.ItemTemplate>
+
+            </GridView>
+
+        </Grid>
+
+    </Grid>
+
+</Page>
