@@ -18,15 +18,27 @@ namespace ControlPantallas.ViewModels
     {
 
         public ObservableCollection<Fondo> Fondos { get; } = new();
+        public ObservableCollection<TipoPantalla> TiposPantalla { get; } = new(Enum.GetValues<TipoPantalla>());
+        public ObservableCollection<TipoTransicion> TiposTransicion { get; } = new(Enum.GetValues<TipoTransicion>());
+        public ObservableCollection<TipoFondo> TiposFondo { get; } = new(Enum.GetValues<TipoFondo>());
 
         [ObservableProperty]
-        private Fondo fondoSeleccionado;
+        private Fondo? fondoSeleccionado;
 
         [ObservableProperty]
-        private string mensaje;
+        private string mensaje = string.Empty;
 
         [ObservableProperty]
         private bool mostrarNotificacion;
+
+        [ObservableProperty]
+        private TipoPantalla pantallaSeleccionada = TipoPantalla.Curva;
+
+        [ObservableProperty]
+        private TipoTransicion transicionSeleccionada = TipoTransicion.Ninguna;
+
+        [ObservableProperty]
+        private TipoFondo tipoFondoSeleccionado = TipoFondo.Foto;
 
         private int contador = 0;
 
@@ -78,10 +90,46 @@ namespace ControlPantallas.ViewModels
                     {
                         Id = contador++,
                         Ruta = file.Path,
-                        Tipo = tipo
+                        Tipo = tipo,
+                        Pantalla = TipoPantalla.Curva,
+                        Transicion = TipoTransicion.Ninguna
                     });
                 }
             }
+        }
+
+        partial void OnFondoSeleccionadoChanged(Fondo? value)
+        {
+            if (value == null)
+                return;
+
+            PantallaSeleccionada = value.Pantalla;
+            TransicionSeleccionada = value.Transicion;
+            TipoFondoSeleccionado = value.Tipo;
+        }
+
+        partial void OnPantallaSeleccionadaChanged(TipoPantalla value)
+        {
+            if (FondoSeleccionado == null)
+                return;
+
+            FondoSeleccionado.Pantalla = value;
+        }
+
+        partial void OnTransicionSeleccionadaChanged(TipoTransicion value)
+        {
+            if (FondoSeleccionado == null)
+                return;
+
+            FondoSeleccionado.Transicion = value;
+        }
+
+        partial void OnTipoFondoSeleccionadoChanged(TipoFondo value)
+        {
+            if (FondoSeleccionado == null)
+                return;
+
+            FondoSeleccionado.Tipo = value;
         }
 
         [RelayCommand]
@@ -91,10 +139,10 @@ namespace ControlPantallas.ViewModels
                 return;
 
             string nombre = Path.GetFileName(FondoSeleccionado.Ruta);
-            var path = fondoSeleccionado.Ruta.Replace("\\", "/");
-            sender.SendMessage(BSBuilder.LoadFileCurva(path));
+            var path = FondoSeleccionado.Ruta.Replace("\\", "/");
+            sender.SendMessage(BSBuilder.LoadFile(path, FondoSeleccionado.Pantalla));
 
-            Mensaje = $"Entra fondo: {nombre}";
+            Mensaje = $"Entra fondo: {nombre} ({FondoSeleccionado.Pantalla}, {FondoSeleccionado.Transicion}, {FondoSeleccionado.Tipo})";
             MostrarNotificacion = true;
         }
 

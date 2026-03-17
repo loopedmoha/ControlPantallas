@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using SuperfaldonWinUI.Data;
+using ControlPantallas.models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace ControlPantallas.brainstorm
             }
             return res;
         }
+
         private static string OrderString(string name, string type, string value)
         {
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(type) || string.IsNullOrWhiteSpace(value))
@@ -46,11 +48,8 @@ namespace ControlPantallas.brainstorm
             var res = "";
             res = $"itemset(\"<{db}>{name}\", \"{type}\", \"{value}\");";
 
-
             return res;
-
         }
-
 
         public static string CarruselEntra(bool oficial)
         {
@@ -71,10 +70,19 @@ namespace ControlPantallas.brainstorm
             var res = "";
             if (file != "")
             {
-               res = OrderString("FondoCurva", "TEX_FILE", file);
+                res = OrderString("FondoCurva", "TEX_FILE", file);
             }
 
             return res;
+        }
+
+        public static string LoadFile(string file, TipoPantalla pantalla)
+        {
+            if (string.IsNullOrWhiteSpace(file))
+                return "";
+
+            var objetivo = pantalla == TipoPantalla.Totem ? "FondoTotem" : "FondoCurva";
+            return OrderString(objetivo, "TEX_FILE", file);
         }
     }
 }

@@ -12,12 +12,29 @@ namespace ControlPantallas.models
         Video
     }
 
+    public enum TipoPantalla
+    {
+        Curva,
+        Totem
+    }
+
+    public enum TipoTransicion
+    {
+        Ninguna,
+        ArribaAbajo,
+        IzquierdaDerecha
+    }
+
     public class Fondo
     {
         public int Id { get; set; }
 
-        public string Ruta { get; set; }
+        public string Ruta { get; set; } = string.Empty;
 
         public TipoFondo Tipo { get; set; }
+
+        public TipoPantalla Pantalla { get; set; } = TipoPantalla.Curva;
+
+        public TipoTransicion Transicion { get; set; } = TipoTransicion.Ninguna;
     }
 }

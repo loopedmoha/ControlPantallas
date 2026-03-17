@@ -48,6 +48,25 @@
                     Content="Sale Fondo"
                     Command="{Binding SaleFondoCommand}"/>
 
+                <TextBlock
+                    Text="Opciones del fondo seleccionado"
+                    TextWrapping="WrapWholeWords"/>
+
+                <ComboBox
+                    Header="Pantalla"
+                    ItemsSource="{Binding TiposPantalla}"
+                    SelectedItem="{Binding PantallaSeleccionada, Mode=TwoWay}"/>
+
+                <ComboBox
+                    Header="Transición"
+                    ItemsSource="{Binding TiposTransicion}"
+                    SelectedItem="{Binding TransicionSeleccionada, Mode=TwoWay}"/>
+
+                <ComboBox
+                    Header="Tipo"
+                    ItemsSource="{Binding TiposFondo}"
+                    SelectedItem="{Binding TipoFondoSeleccionado, Mode=TwoWay}"/>
+
             </StackPanel>
 
             <!-- GridView -->
@@ -75,6 +94,18 @@
                                 Text="{Binding Ruta}"
                                 FontSize="12"
                                 TextTrimming="CharacterEllipsis"/>
+
+                            <TextBlock
+                                Text="{Binding Tipo}"
+                                FontSize="12"/>
+
+                            <TextBlock
+                                Text="{Binding Pantalla}"
+                                FontSize="12"/>
+
+                            <TextBlock
+                                Text="{Binding Transicion}"
+                                FontSize="12"/>
 
                         </StackPanel>
 
