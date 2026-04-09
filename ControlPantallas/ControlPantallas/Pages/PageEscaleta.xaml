@@ -37,8 +37,8 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter
-                        Property="Background"
-                        Value="{Binding ., Converter={StaticResource IndiceColorConverter}, ConverterParameter={x:Bind ListaFondos}}"/>
+    Property="Background"
+    Value="{Binding ., Converter={StaticResource IndiceColorConverter}}"/>
                 </Style>
             </ListView.ItemContainerStyle>
 
@@ -89,7 +89,7 @@
                 Click="ButtonEscaleta_Entra"/>
 
             <Button
-                Content="Sale de la escaleta"
+                Content="Sale"
                 Click="ButtonEscaleta_Sale"/>
 
         </StackPanel>
