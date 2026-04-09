@@ -12,10 +12,25 @@ namespace ControlPantallas.Servicios
         public static EscaletaService Instance
             => _instance ??= new EscaletaService();
 
-        public void AñadirFondo(Fondo fondo)
+        public bool EntraActivo { get; private set; }
+
+        public Fondo? FondoEntraActual { get; private set; }
+
+        public void AnadirFondo(Fondo fondo)
         {
             if (fondo != null)
                 Escaleta.Add(fondo);
+        }
+
+        public void MarcarEntra(Fondo fondo)
+        {
+            FondoEntraActual = fondo;
+            EntraActivo = fondo != null;
+        }
+
+        public void MarcarSale()
+        {
+            EntraActivo = false;
         }
     }
 }

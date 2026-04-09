@@ -1,4 +1,4 @@
-using ControlPantallas.Servicios;
+ï»¿using ControlPantallas.Servicios;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -36,7 +36,7 @@ namespace ControlPantallas.Pages
             {
                 if (vm.FondoSeleccionado != null)
                 {
-                    EscaletaService.Instance.AñadirFondo(vm.FondoSeleccionado);
+                    EscaletaService.Instance.AnadirFondo(vm.FondoSeleccionado);
                 }
             }
         }
