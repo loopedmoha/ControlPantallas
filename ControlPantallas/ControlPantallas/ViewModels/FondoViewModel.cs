@@ -1,29 +1,28 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ControlPantallas.brainstorm;
+using ControlPantallas.models;
+using System;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
-using System.IO;
-using ControlPantallas.models;
-using System.Threading.Tasks;
-using System;
-using ControlPantallas.Servicios;
-using ControlPantallas.Config;
-using ControlPantallas.brainstorm;
 
 namespace ControlPantallas.ViewModels
 {
     public partial class FondoViewModel : ObservableObject
     {
-
         public ObservableCollection<Fondo> Fondos { get; } = new();
         public ObservableCollection<TipoPantalla> TiposPantalla { get; } = new(Enum.GetValues<TipoPantalla>());
         public ObservableCollection<TipoTransicion> TiposTransicion { get; } = new(Enum.GetValues<TipoTransicion>());
-        public ObservableCollection<TipoFondo> TiposFondo { get; } = new(Enum.GetValues<TipoFondo>());
 
         [ObservableProperty]
         private Fondo? fondoSeleccionado;
+
+        [ObservableProperty]
+        private bool hayFondoSeleccionado;
 
         [ObservableProperty]
         private string mensaje = string.Empty;
@@ -37,23 +36,12 @@ namespace ControlPantallas.ViewModels
         [ObservableProperty]
         private TipoTransicion transicionSeleccionada = TipoTransicion.Ninguna;
 
-        [ObservableProperty]
-        private TipoFondo tipoFondoSeleccionado = TipoFondo.Foto;
+        private int contador;
 
-        private int contador = 0;
-
-        private BSSender sender = BSSender.GetInstance();
-        
-        private Configuracion config = new()
-        {
-            Ip = "127.0.0.1",
-            Puerto = 5123
-        };
+        private readonly BSSender sender = BSSender.GetInstance();
 
         [RelayCommand]
         public async Task SeleccionarCarpeta()
-
-
         {
             FolderPicker picker = new();
 
@@ -67,13 +55,14 @@ namespace ControlPantallas.ViewModels
             if (folder == null)
                 return;
 
+            FondoSeleccionado = null;
             Fondos.Clear();
 
             var archivos = await folder.GetFilesAsync();
 
             foreach (var file in archivos)
             {
-                string ext = file.FileType.ToLower();
+                string ext = file.FileType.ToLowerInvariant();
 
                 if (ext == ".jpg" ||
                     ext == ".png" ||
@@ -81,16 +70,11 @@ namespace ControlPantallas.ViewModels
                     ext == ".mp4" ||
                     ext == ".webm")
                 {
-                    TipoFondo tipo =
-                        (ext == ".mp4" || ext == ".webm")
-                        ? TipoFondo.Video
-                        : TipoFondo.Foto;
-
                     Fondos.Add(new Fondo
                     {
                         Id = contador++,
                         Ruta = file.Path,
-                        Tipo = tipo,
+                        Tipo = ObtenerTipoFondoDesdeRuta(file.Path),
                         Pantalla = TipoPantalla.Curva,
                         Transicion = TipoTransicion.Ninguna
                     });
@@ -100,12 +84,14 @@ namespace ControlPantallas.ViewModels
 
         partial void OnFondoSeleccionadoChanged(Fondo? value)
         {
+            HayFondoSeleccionado = value != null;
+
             if (value == null)
                 return;
 
+            value.Tipo = ObtenerTipoFondoDesdeRuta(value.Ruta);
             PantallaSeleccionada = value.Pantalla;
             TransicionSeleccionada = value.Transicion;
-            TipoFondoSeleccionado = value.Tipo;
         }
 
         partial void OnPantallaSeleccionadaChanged(TipoPantalla value)
@@ -124,40 +110,47 @@ namespace ControlPantallas.ViewModels
             FondoSeleccionado.Transicion = value;
         }
 
-        partial void OnTipoFondoSeleccionadoChanged(TipoFondo value)
-        {
-            if (FondoSeleccionado == null)
-                return;
-
-            FondoSeleccionado.Tipo = value;
-        }
-
         [RelayCommand]
-        private async Task EntraFondo()
+        private void EntraFondo()
         {
             if (FondoSeleccionado == null)
                 return;
 
             string nombre = Path.GetFileName(FondoSeleccionado.Ruta);
-            var path = FondoSeleccionado.Ruta.Replace("\\", "/");
+            string path = FondoSeleccionado.Ruta.Replace("\\", "/");
             sender.SendMessage(BSBuilder.LoadFile(path, FondoSeleccionado.Pantalla));
 
             Mensaje = $"Entra fondo: {nombre} ({FondoSeleccionado.Pantalla}, {FondoSeleccionado.Transicion}, {FondoSeleccionado.Tipo})";
             MostrarNotificacion = true;
         }
 
-
         [RelayCommand]
-        private async Task SaleFondo()
+        private void SaleFondo()
         {
             if (FondoSeleccionado == null)
                 return;
 
             string nombre = Path.GetFileName(FondoSeleccionado.Ruta);
 
-
             Mensaje = $"Sale fondo: {nombre}";
             MostrarNotificacion = true;
+        }
+
+        [RelayCommand]
+        private void AnadirAEscaleta()
+        {
+            if (FondoSeleccionado == null)
+                return;
+
+            string nombre = Path.GetFileName(FondoSeleccionado.Ruta);
+            Mensaje = $"Añadido a escaleta: {nombre} ({FondoSeleccionado.Pantalla}, {FondoSeleccionado.Transicion}, {FondoSeleccionado.Tipo})";
+            MostrarNotificacion = true;
+        }
+
+        private static TipoFondo ObtenerTipoFondoDesdeRuta(string ruta)
+        {
+            string ext = Path.GetExtension(ruta).ToLowerInvariant();
+            return (ext == ".mp4" || ext == ".webm") ? TipoFondo.Video : TipoFondo.Foto;
         }
     }
 }
