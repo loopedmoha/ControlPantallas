@@ -67,6 +67,9 @@
                     ItemsSource="{Binding TiposFondo}"
                     SelectedItem="{Binding TipoFondoSeleccionado, Mode=TwoWay}"/>
 
+                <Button
+    Content="Añadir a Escaleta"
+    Click="AnadirEscaleta_Click"/>
             </StackPanel>
 
             <!-- GridView -->

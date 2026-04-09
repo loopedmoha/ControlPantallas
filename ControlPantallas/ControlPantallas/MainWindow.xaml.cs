@@ -43,5 +43,17 @@ namespace ControlPantallas
             if (args.SelectedItemContainer.Tag.ToString() == "PageFondo")
                 ContentFrame.Navigate(typeof(PageFondo));
         }
+
+        private void AbrirEscaleta_Click(object sender, RoutedEventArgs e)
+        {
+            var nuevaVentana = new Window();
+
+            var frame = new Frame();
+            frame.Navigate(typeof(PageEscaleta));
+
+            nuevaVentana.Content = frame;
+
+            nuevaVentana.Activate();
+        }
     }
 }

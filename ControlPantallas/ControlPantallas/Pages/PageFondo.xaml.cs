@@ -1,3 +1,4 @@
+using ControlPantallas.Servicios;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -26,6 +27,18 @@ namespace ControlPantallas.Pages
         public PageFondo()
         {
             this.InitializeComponent();
+        }
+
+
+        private void AnadirEscaleta_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            if (DataContext is ViewModels.FondoViewModel vm)
+            {
+                if (vm.FondoSeleccionado != null)
+                {
+                    EscaletaService.Instance.AñadirFondo(vm.FondoSeleccionado);
+                }
+            }
         }
     }
 }

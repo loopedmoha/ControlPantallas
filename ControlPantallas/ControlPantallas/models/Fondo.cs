@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,5 +37,7 @@ namespace ControlPantallas.models
         public TipoPantalla Pantalla { get; set; } = TipoPantalla.Curva;
 
         public TipoTransicion Transicion { get; set; } = TipoTransicion.Ninguna;
+
+        public string NombreArchivo => Path.GetFileName(Ruta);
     }
 }

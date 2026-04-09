@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="ControlPantallas.Pages.PageEscaleta"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ControlPantallas.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:converters="using:ControlPantallas.Converters"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+        xmlns:models="using:ControlPantallas.models">
+
+    <Page.Resources>
+        <converters:IndiceColorConverter x:Key="IndiceColorConverter"/>
+    </Page.Resources>
+    <Grid Padding="10">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="200" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- LISTVIEW -->
+        <ListView
+            x:Name="ListaFondos"
+    ItemsSource="{x:Bind Escaleta, Mode=OneWay}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+
+                    <Setter Property="Background"
+                    Value="{Binding ., Converter={StaticResource IndiceColorConverter},
+                        ConverterParameter={x:Bind ListaFondos}}"/>
+
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:Fondo">
+
+                    <StackPanel Orientation="Horizontal" Spacing="10" Padding="5">
+
+                        <!-- Miniatura -->
+                        <Image
+                    Source="{x:Bind Ruta}"
+                    Width="80"
+                    Height="80"
+                    Stretch="UniformToFill"/>
+
+                        <!-- Nombre del fichero -->
+                        <TextBlock
+                    Text="{x:Bind NombreArchivo}"
+                    VerticalAlignment="Center"
+                    FontSize="14"/>
+
+                    </StackPanel>
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+        <!-- BOTONES DERECHA -->
+        <StackPanel
+            Grid.Column="1"
+            Grid.Row="0"
+            VerticalAlignment="Center"
+            Spacing="10">
+
+            <Button Content="ENTRA" Click="ButtonEscaleta_Entra"/>
+            <Button Content="Acción 2"/>
+
+        </StackPanel>
+
+        <!-- CHECK ABAJO -->
+        <CheckBox
+            x:Name="CheckReordenar"
+            Grid.Column="0"
+            Grid.Row="1"
+            Content="Activar reordenación"
+            Checked="CheckReordenar_Checked"
+            Unchecked="CheckReordenar_Unchecked"/>
+
+    </Grid>
+</Page>
