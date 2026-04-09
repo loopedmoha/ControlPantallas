@@ -7,7 +7,7 @@ namespace ControlPantallas.Servicios
     {
         public ObservableCollection<Fondo> Escaleta { get; } = new();
 
-        private static EscaletaService _instance;
+        private static EscaletaService? _instance;
 
         public static EscaletaService Instance
             => _instance ??= new EscaletaService();
@@ -18,8 +18,17 @@ namespace ControlPantallas.Servicios
 
         public void AnadirFondo(Fondo fondo)
         {
-            if (fondo != null)
-                Escaleta.Add(fondo);
+            if (fondo == null)
+                return;
+
+            Escaleta.Add(new Fondo
+            {
+                Id = fondo.Id,
+                Ruta = fondo.Ruta,
+                Tipo = fondo.Tipo,
+                Pantalla = fondo.Pantalla,
+                Transicion = fondo.Transicion
+            });
         }
 
         public void MarcarEntra(Fondo fondo)

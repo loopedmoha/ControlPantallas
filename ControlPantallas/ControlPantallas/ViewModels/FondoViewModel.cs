@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using ControlPantallas.brainstorm;
 using ControlPantallas.models;
+using ControlPantallas.Servicios;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -141,6 +142,15 @@ namespace ControlPantallas.ViewModels
         {
             if (FondoSeleccionado == null)
                 return;
+
+            EscaletaService.Instance.AnadirFondo(new Fondo
+            {
+                Id = FondoSeleccionado.Id,
+                Ruta = FondoSeleccionado.Ruta,
+                Tipo = FondoSeleccionado.Tipo,
+                Pantalla = FondoSeleccionado.Pantalla,
+                Transicion = FondoSeleccionado.Transicion
+            });
 
             string nombre = Path.GetFileName(FondoSeleccionado.Ruta);
             Mensaje = $"Añadido a escaleta: {nombre} ({FondoSeleccionado.Pantalla}, {FondoSeleccionado.Transicion}, {FondoSeleccionado.Tipo})";

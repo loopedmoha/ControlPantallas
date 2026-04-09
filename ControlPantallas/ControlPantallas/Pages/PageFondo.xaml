@@ -92,10 +92,6 @@
                     </GridView.ItemTemplate>
 
                 </GridView>
-
-                <Button
-    Content="Añadir a Escaleta"
-    Click="AnadirEscaleta_Click"/>
             </StackPanel>
 
             <!-- Panel derecho -->
@@ -155,3 +151,4 @@
     </Grid>
 
 </Page>
+
